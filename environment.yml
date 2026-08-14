@@ -1,0 +1,17 @@
+name: dncr-classify
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - llvm-openmp
+  - pip
+  - pip:
+      - joblib==1.5.3
+      - matplotlib==3.11.1
+      - numpy==2.5.1
+      - openpyxl==3.1.5
+      - PyYAML==6.0.3
+      - reportlab==4.5.1
+      - scikit-learn==1.9.0
+      - scipy==1.18.0
+      - xgboost==3.3.0

@@ -1,0 +1,96 @@
+random_seed: 13794
+data_root: data
+
+split:
+  fixed_splits_path: configs/fixed_patient_splits.json
+
+runtime:
+  parallel_jobs: auto
+
+models:
+  LinearSVC:
+    class_weight: balanced
+    dual: auto
+    max_iter: 20000
+    threshold: 0.0
+  LDA:
+    solver: lsqr
+    shrinkage: auto
+    threshold: 0.0
+  RF:
+    n_estimators: 500
+    max_features: sqrt
+    min_samples_leaf: 2
+    class_weight: balanced
+    n_jobs: 1
+    threshold: 0.5
+  DT:
+    max_depth: 4
+    min_samples_leaf: 2
+    class_weight: balanced
+    threshold: 0.5
+  XGBoost:
+    n_estimators: 300
+    max_depth: 3
+    learning_rate: 0.03
+    subsample: 0.8
+    colsample_bytree: 0.8
+    min_child_weight: 2
+    reg_alpha: 0.1
+    reg_lambda: 2.0
+    scale_pos_weight: auto
+    objective: binary:logistic
+    eval_metric: logloss
+    n_jobs: 1
+    verbosity: 0
+    threshold: 0.5
+
+networks:
+  WB:
+    folder: 01_whole_brain
+  DMN:
+    folder: 02_DMN
+  SMN:
+    folder: 03_SMN
+  VN:
+    folder: 04_VN
+
+topology_prior_selection:
+  workbook: mask.xlsx
+  alpha: 0.05
+
+k_selection:
+  inner_splits: 10
+  inner_repeats: 3
+  k_lower_ratio: 0.75
+  k_upper_ratio: 1.25
+  maximum_k_candidates: 5
+
+reference_specs:
+  Original:
+    WB:
+      FC: {K: 150, LinearSVC_C: 0.01}
+      topology: {K: 200, LinearSVC_C: 0.003}
+      FC+topology: {K: 150, LinearSVC_C: 0.01}
+    DMN:
+      FC: {K: 100, LinearSVC_C: 0.01}
+      topology: {K: 20, LinearSVC_C: 3.0}
+      FC+topology: {K: 200, LinearSVC_C: 0.003}
+    SMN:
+      FC: {K: 3, LinearSVC_C: 0.0001}
+      topology: {K: 5, LinearSVC_C: 10.0}
+      FC+topology: {K: 8, LinearSVC_C: 0.0001}
+    VN:
+      FC: {K: 20, LinearSVC_C: 1.0}
+      topology: {K: 10, LinearSVC_C: 1.0}
+      FC+topology: {K: 15, LinearSVC_C: 0.1}
+  Mask:
+    WB:
+      topology: {K: 200, LinearSVC_C: 0.001}
+      FC+topology: {K: 200, LinearSVC_C: 0.001}
+    DMN:
+      topology: {K: 20, LinearSVC_C: 3.0}
+      FC+topology: {K: 100, LinearSVC_C: 0.01}
+    SMN:
+      FC: {K: 2, LinearSVC_C: 0.0003}
+      FC+topology: {K: 3, LinearSVC_C: 0.0001}
